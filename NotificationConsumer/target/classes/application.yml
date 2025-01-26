@@ -1,0 +1,31 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: notification
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  mail:
+    host: localhost
+    port: 1025
+    username: test@yahoo.com
+    password: password
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+management:
+  tracing:
+    sampling:
+      probability: 1

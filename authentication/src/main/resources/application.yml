@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: authentication
+  datasource:
+    url: jdbc:postgresql://localhost:5433/customer
+    password: 2001
+    username: sergiu
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+server:
+  port: 8085
+eureka:
+  client:
+    service-url:
+      default: http://localhost:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+management:
+  tracing:
+    sampling:
+      probability: 1

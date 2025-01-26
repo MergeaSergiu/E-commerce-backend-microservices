@@ -1,0 +1,78 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_microservices_customer
+    environment:
+      POSTGRES_USER: sergiu
+      POSTGRES_PASSWORD: 2001
+      POSTGRES_DB: customer
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - postgres_microservice
+    restart: unless-stopped
+  postgres-fraud:
+    image: postgres:latest
+    container_name: postgres_microservices_fraud
+    environment:
+      POSTGRES_USER: sergiu
+      POSTGRES_PASSWORD: 2001
+      POSTGRES_DB: fraud
+    volumes:
+      - postgres_data_fraud:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    networks:
+      - postgres_microservice
+    restart: unless-stopped
+  postgres-products:
+    image: postgres:latest
+    container_name: postgres_microservices_products
+    environment:
+      POSTGRES_USER: sergiu
+      POSTGRES_PASSWORD: 2001
+      POSTGRES_DB: products
+    volumes:
+      - postgres_data_products:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+    networks:
+      - postgres_microservice
+    restart: unless-stopped
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin_microservices
+    ports:
+      - "9411:9411" # Default port for Zipkin
+    networks:
+      - postgres_microservice
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbit-microservices
+    ports:
+      - "5672:5672" # Default port for RabbitMQ
+      - "15672:15672" # Management UI port
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - postgres_microservice
+  maildev:
+    container_name: maildev_microservices
+    image: maildev/maildev
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+    networks:
+      - postgres_microservice
+
+volumes:
+  postgres_data:
+  postgres_data_fraud:
+  postgres_data_products:
+networks:
+  postgres_microservice:
+    driver: bridge
+
