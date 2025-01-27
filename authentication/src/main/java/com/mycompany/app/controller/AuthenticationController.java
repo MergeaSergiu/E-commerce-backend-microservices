@@ -1,6 +1,8 @@
 package com.mycompany.app.controller;
 
 
+import com.mycompany.app.record.AuthenticationRequest;
+import com.mycompany.app.record.AuthenticationResponse;
 import com.mycompany.app.record.UserRequest;
 import com.mycompany.app.service.UserService;
 import jakarta.validation.Valid;
@@ -10,8 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping
-@RestController("/api/v1/auth")
+
+@RestController
+@RequestMapping("/api/v1/auth")
 public class AuthenticationController {
 
     private final UserService userService;
@@ -20,9 +23,14 @@ public class AuthenticationController {
         this.userService = userService;
     }
 
-    @PostMapping("/users")
+    @PostMapping
     public ResponseEntity<String> createUser(@RequestBody @Valid UserRequest userRequest) {
         userService.addUser(userRequest);
         return ResponseEntity.ok("User added");
+    }
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest authenticationRequest) {
+        return ResponseEntity.ok(userService.authenticateUser(authenticationRequest));
     }
 }

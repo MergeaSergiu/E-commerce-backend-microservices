@@ -10,4 +10,6 @@ public interface ProductService {
     void saveProduct(ProductRequest productRequest);
 
     List<ProductResponse> getAllProducts();
+
+    String updateProductQuantity(Integer id, Integer quantity);
 }

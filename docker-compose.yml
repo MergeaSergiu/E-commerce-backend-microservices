@@ -41,6 +41,20 @@ services:
     networks:
       - postgres_microservice
     restart: unless-stopped
+  postgres-authentication:
+    image: postgres:latest
+    container_name: postgres_microservices_authentication
+    environment:
+      POSTGRES_USER: sergiu
+      POSTGRES_PASSWORD: 2001
+      POSTGRES_DB: authentication
+    volumes:
+      - postgres_data_authentication:/var/lib/postgresql/data
+    ports:
+      - "5436:5432"
+    networks:
+      - postgres_microservice
+    restart: unless-stopped
   zipkin:
     image: openzipkin/zipkin:latest
     container_name: zipkin_microservices
@@ -72,6 +86,7 @@ volumes:
   postgres_data:
   postgres_data_fraud:
   postgres_data_products:
+  postgres_data_authentication:
 networks:
   postgres_microservice:
     driver: bridge
