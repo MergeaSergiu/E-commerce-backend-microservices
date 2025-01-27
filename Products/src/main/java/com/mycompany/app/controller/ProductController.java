@@ -30,4 +30,11 @@ public class ProductController {
         List<ProductResponse> productsList = productService.getAllProducts();
         return ResponseEntity.ok(productsList);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateProduct(@PathVariable(name = "id") Integer id, @RequestParam(name = "quantity") Integer quantity){
+        String productName = productService.updateProductQuantity(id, quantity);
+        return ResponseEntity.ok("Product" + productName +  "updated successfully");
+
+    }
 }

@@ -6,6 +6,7 @@ import com.mycompany.app.record.ProductResponse;
 import com.mycompany.app.repository.ProductRepository;
 import com.mycompany.app.service.ProductService;
 import com.mycompany.app.service.RabbitMQProducer;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -50,5 +51,16 @@ public class ProductServiceImpl implements ProductService {
                         .description(product.getDescription())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String updateProductQuantity(Integer id, Integer quantity) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("There is no product with id: " + id));
+        if(quantity < product.getQuantity()) {
+            throw new EntityNotFoundException("The product quantity is less than the current product quantity");
+        }
+        product.setQuantity(quantity);
+        productRepository.save(product);
+        return product.getName();
     }
 }

@@ -1,8 +1,10 @@
+server:
+  port: 8085
 spring:
   application:
     name: authentication
   datasource:
-    url: jdbc:postgresql://localhost:5433/customer
+    url: jdbc:postgresql://localhost:5436/authentication
     password: 2001
     username: sergiu
   jpa:
@@ -13,8 +15,6 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-server:
-  port: 8085
 eureka:
   client:
     service-url:
