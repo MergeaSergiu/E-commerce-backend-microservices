@@ -19,6 +19,7 @@
     <module>Products</module>
     <module>NotificationConsumer</module>
       <module>authentication</module>
+      <module>order</module>
   </modules>
 
   <properties>
