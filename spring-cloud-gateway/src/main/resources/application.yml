@@ -6,34 +6,42 @@ spring:
     name: spring-cloud-gateway
   cloud:
     gateway:
-      routes:
-        - id: customer
-          uri: http://localhost:8081  # Service name registered in Eureka
-          predicates:
-            - Path=/api/v1/customers/**
-          filters:
-            - StripPrefix=1
-        - id: fraud
-          uri: http://localhost:8082  # Service name registered in Eureka
-          predicates:
-            - Path=/api/v1/fraud/**
-          filters:
-            - StripPrefix=1
-        - id: products
-          uri: http://localhost:8083  # Service name registered in Eureka
-          predicates:
-            - Path=/api/v1/products/**
-          filters:
-            - StripPrefix=1
-        - id: authentication
-          uri: http://localhost:8085  # Service name registered in Eureka
-          predicates:
-            - Path=/api/v1/auth/**
-          filters:
-            - StripPrefix=1
+      discovery:
+        locator:
+          enabled: true
+#      routes:
+#        - id: customer
+#          uri: lb://customer  # Service name registered in Eureka
+#          predicates:
+#            - Path=/api/v1/customers/**
+#          filters:
+#            - JwtFilter
+#        - id: fraud
+#          uri: lb://fraud  # Service name registered in Eureka
+#          predicates:
+#            - Path=/api/v1/fraud/**
+#          filters:
+#            - JwtFilter
+#        - id: products
+#          uri: lb://products  # Service name registered in Eureka
+#          predicates:
+#            - Path=/api/v1/products/**
+#          filters:
+#            - JwtFilter
+#        - id: authentication
+#          uri: lb://authentication  # Service name registered in Eureka
+#          predicates:
+#            - Path=/api/v1/auth/**
+#          filters:
+#            - JwtFilter
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
     fetch-registry: true
     register-with-eureka: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: gateway

@@ -1,10 +1,8 @@
-server:
-  port: 8083
 spring:
   application:
-    name: products
+    name: order
   datasource:
-    url: jdbc:postgresql://localhost:5435/products
+    url: jdbc:postgresql://localhost:5437/order
     password: 2001
     username: sergiu
   jpa:
@@ -15,15 +13,12 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+server:
+  port: 8086
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://localhost:8761/eureka/
     fetch-registry: true
     register-with-eureka: true
 management:

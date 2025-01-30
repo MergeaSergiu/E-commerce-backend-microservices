@@ -12,4 +12,6 @@ public interface ProductService {
     List<ProductResponse> getAllProducts();
 
     String updateProductQuantity(Integer id, Integer quantity);
+
+    ProductResponse getProductById(Integer productId);
 }
