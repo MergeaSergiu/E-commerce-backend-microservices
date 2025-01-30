@@ -45,6 +45,7 @@ public class ProductServiceImpl implements ProductService {
         }
         return products.stream()
                 .map(product -> ProductResponse.builder()
+                        .productId(product.getId())
                         .name(product.getName())
                         .price(product.getPrice())
                         .quantity(product.getQuantity())
@@ -62,5 +63,17 @@ public class ProductServiceImpl implements ProductService {
         product.setQuantity(quantity);
         productRepository.save(product);
         return product.getName();
+    }
+
+    @Override
+    public ProductResponse getProductById(Integer productId) {
+        Product foundProduct = productRepository.findById(productId).orElseThrow(() -> new EntityNotFoundException("There is no product with id: " + productId));
+        return ProductResponse.builder()
+                .productId(foundProduct.getId())
+                .name(foundProduct.getName())
+                .price(foundProduct.getPrice())
+                .quantity(foundProduct.getQuantity())
+                .description(foundProduct.getDescription())
+                .build();
     }
 }

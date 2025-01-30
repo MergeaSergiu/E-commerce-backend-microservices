@@ -5,6 +5,7 @@ import com.mycompany.app.model.User;
 import com.mycompany.app.record.AuthenticationRequest;
 import com.mycompany.app.record.AuthenticationResponse;
 import com.mycompany.app.record.UserRequest;
+import com.mycompany.app.record.UserResponse;
 import com.mycompany.app.repository.RoleRepository;
 import com.mycompany.app.repository.UserRepository;
 import com.mycompany.app.service.UserService;
@@ -71,6 +72,15 @@ public class UserServiceImpl implements UserService {
         return AuthenticationResponse
                 .builder()
                 .token(jwtToken)
+                .build();
+    }
+
+    @Override
+    public UserResponse getUserById(Integer userId) {
+        User foundUser = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " was not found"));
+        return UserResponse.builder()
+                .userId(foundUser.getId())
+                .username(foundUser.getEmail())
                 .build();
     }
 }

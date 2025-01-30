@@ -55,6 +55,20 @@ services:
     networks:
       - postgres_microservice
     restart: unless-stopped
+  postgres-order:
+    image: postgres:latest
+    container_name: postgres_microservices_order
+    environment:
+      POSTGRES_USER: sergiu
+      POSTGRES_PASSWORD: 2001
+      POSTGRES_DB: order
+    volumes:
+      - postgres_data_order:/var/lib/postgresql/data
+    ports:
+      - "5437:5432"
+    networks:
+      - postgres_microservice
+    restart: unless-stopped
   zipkin:
     image: openzipkin/zipkin:latest
     container_name: zipkin_microservices
@@ -87,6 +101,7 @@ volumes:
   postgres_data_fraud:
   postgres_data_products:
   postgres_data_authentication:
+  postgres_data_order:
 networks:
   postgres_microservice:
     driver: bridge
