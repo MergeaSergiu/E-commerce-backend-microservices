@@ -26,15 +26,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void saveOrder(OrderRequest orderRequest) {
-
+    public void saveOrder(OrderRequest orderRequest, String authorization) {
+        Integer quantityForProduct = productAndUserForOrder.getQuantity(orderRequest.productId(), authorization);
+        List<Order> orders = orderRepository.getOrdersByProductId(orderRequest.productId());
+        if(orders.size() > quantityForProduct) {
+            System.out.println("There are more orders than products in inventory");
+        }
         Order order = Order.builder()
                 .userId(orderRequest.userId())
                 .productId(orderRequest.productId())
                 .createdAt(LocalDateTime.now())
                 .paymentMethod(orderRequest.paymentMethod())
                 .build();
-
         orderRepository.save(order);
     }
 
@@ -59,4 +62,27 @@ public class OrderServiceImpl implements OrderService {
         }
         return orderResponses;
     }
+
+    @Override
+    public List<OrderResponse> getOrdersByUser( Integer userId, String authorization) {
+        List<Order> ordersForUser = orderRepository.getOrdersByUserId(userId);
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        for (Order order : ordersForUser) {
+            UserResponse userResponse = productAndUserForOrder.getUser(userId);
+            ProductResponse productResponse = productAndUserForOrder.getProduct(order.getProductId(), authorization);
+            OrderResponse orderResponse = OrderResponse.builder()
+                    .orderId(order.getId())
+                    .userId(userResponse.userId())
+                    .productId(productResponse.productId())
+                    .username(userResponse.username())
+                    .productName(productResponse.name())
+                    .productPrice(productResponse.price())
+                    .orderDate(order.getCreatedAt())
+                    .paymentMethod(order.getPaymentMethod())
+                    .build();
+            orderResponses.add(orderResponse);
+        }
+            return orderResponses;
+    }
+
 }

@@ -20,8 +20,8 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createOrder(@RequestBody @Valid OrderRequest orderRequest) {
-        orderService.saveOrder(orderRequest);
+    public ResponseEntity<String> createOrder(@RequestBody @Valid OrderRequest orderRequest, @RequestHeader("Authorization") String authorization) {
+        orderService.saveOrder(orderRequest, authorization);
         return ResponseEntity.ok("Order created");
     }
 
@@ -30,4 +30,11 @@ public class OrderController {
        List<OrderResponse> orders =  orderService.getAllOrders(authorization);
        return ResponseEntity.ok(orders);
     }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<List<OrderResponse>> getOrdersByUserId(@PathVariable("userId") Integer userId , @RequestHeader("Authorization") String authorization ) {
+        List<OrderResponse> orderResponses = orderService.getOrdersByUser(userId, authorization);
+        return ResponseEntity.ok(orderResponses);
+    }
+
 }
