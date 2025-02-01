@@ -85,4 +85,25 @@ public class OrderServiceImpl implements OrderService {
             return orderResponses;
     }
 
+    @Override
+    public List<OrderResponse> getOrdersByProduct(Integer productId, String authorization) {
+        List<Order> orders = orderRepository.getOrdersByProductId(productId);
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        for (Order order : orders) {
+            ProductResponse productResponse = productAndUserForOrder.getProduct(order.getProductId(), authorization);
+            OrderResponse orderResponse = OrderResponse.builder()
+                    .orderId(order.getId())
+                    .userId(null)
+                    .productId(productResponse.productId())
+                    .username(null)
+                    .productName(productResponse.name())
+                    .productPrice(productResponse.price())
+                    .orderDate(order.getCreatedAt())
+                    .paymentMethod(order.getPaymentMethod())
+                    .build();
+            orderResponses.add(orderResponse);
+        }
+        return orderResponses;
+    }
+
 }

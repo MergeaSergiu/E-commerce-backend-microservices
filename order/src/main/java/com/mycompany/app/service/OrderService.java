@@ -12,4 +12,6 @@ public interface OrderService {
     List<OrderResponse> getAllOrders(String authorization);
 
     List<OrderResponse> getOrdersByUser(Integer userId, String authorization);
+
+    List<OrderResponse> getOrdersByProduct(Integer productId, String authorization);
 }

@@ -37,4 +37,10 @@ public class OrderController {
         return ResponseEntity.ok(orderResponses);
     }
 
+    @GetMapping("/products/{productId}")
+    public ResponseEntity<List<OrderResponse>> getOrdersByProductId(@PathVariable("productId") Integer productId , @RequestHeader("Authorization") String authorization ) {
+        List<OrderResponse> orderResponses = orderService.getOrdersByProduct(productId, authorization);
+        return ResponseEntity.ok(orderResponses);
+    }
+
 }
