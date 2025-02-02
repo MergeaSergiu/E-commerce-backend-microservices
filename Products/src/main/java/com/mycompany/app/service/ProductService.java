@@ -15,5 +15,4 @@ public interface ProductService {
 
     ProductResponse getProductById(Integer productId);
 
-    Integer getProductQuantity(Integer productId);
 }

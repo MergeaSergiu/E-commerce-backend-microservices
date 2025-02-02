@@ -48,4 +48,25 @@ public class NotificationServiceImpl implements NotificationService {
 
         logger.info("Email sent to shopDeposit@example.com with message: {}", message);
     }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME_ORDER)
+    public void sendEmailNotificationOrder(String message) throws MessagingException {
+
+        String recipient = "recipient@example.com"; // Change this to the recipient email
+        String subject = "Order Notification";
+
+        MimeMessage mimeMessage = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+
+        helper.setTo(recipient);
+        helper.setSubject(subject);
+        helper.setText(message, true); // `true` enables HTML content
+        helper.setFrom("mergeasergiu@gmail.com");
+        helper.setSentDate(new Date());
+
+        emailSender.send(mimeMessage);
+        logger.info("Email sent to recipient@example.com with message: {}", message);
+
+    }
 }

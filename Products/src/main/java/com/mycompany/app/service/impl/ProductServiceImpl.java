@@ -76,9 +76,4 @@ public class ProductServiceImpl implements ProductService {
                 .description(foundProduct.getDescription())
                 .build();
     }
-
-    @Override
-    public Integer getProductQuantity(Integer productId) {
-        return productRepository.findById(productId).get().getQuantity();
-    }
 }

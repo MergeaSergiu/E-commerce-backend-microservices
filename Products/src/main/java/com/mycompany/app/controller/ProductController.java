@@ -31,11 +31,6 @@ public class ProductController {
         return ResponseEntity.ok(productsList);
     }
 
-    @GetMapping("/quantity/{productId}")
-    public Integer getProductQuantity(@PathVariable(name = "productId") Integer productId){
-        return productService.getProductQuantity(productId);
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<String> updateProduct(@PathVariable(name = "id") Integer id, @RequestParam(name = "quantity") Integer quantity){
         String productName = productService.updateProductQuantity(id, quantity);

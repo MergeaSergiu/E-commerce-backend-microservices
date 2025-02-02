@@ -17,6 +17,4 @@ public interface ProductAndUserForOrder {
     @GetMapping("api/v1/products/{productId}")
     ProductResponse getProduct(@PathVariable(name= "productId") Integer productId , @RequestHeader("Authorization") String token);
 
-    @GetMapping("api/v1/products/quantity/{productId}")
-    Integer getQuantity(@PathVariable(name = "productId") Integer productId , @RequestHeader("Authorization") String token);
 }

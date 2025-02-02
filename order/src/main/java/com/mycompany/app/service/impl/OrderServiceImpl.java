@@ -8,6 +8,7 @@ import com.mycompany.app.record.ProductResponse;
 import com.mycompany.app.record.UserResponse;
 import com.mycompany.app.repository.OrderRepository;
 import com.mycompany.app.service.OrderService;
+import com.mycompany.app.service.RabbitMQProducer;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,17 +20,20 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductAndUserForOrder productAndUserForOrder;
+    private final RabbitMQProducer rabbitMQProducer;
 
-    public OrderServiceImpl(OrderRepository orderRepository,  ProductAndUserForOrder productAndUserForOrder) {
+    public OrderServiceImpl(OrderRepository orderRepository,  ProductAndUserForOrder productAndUserForOrder, RabbitMQProducer rabbitMQProducer) {
         this.orderRepository = orderRepository;
         this.productAndUserForOrder = productAndUserForOrder;
+        this.rabbitMQProducer = rabbitMQProducer;
     }
 
     @Override
     public void saveOrder(OrderRequest orderRequest, String authorization) {
-        Integer quantityForProduct = productAndUserForOrder.getQuantity(orderRequest.productId(), authorization);
+        ProductResponse productResponse = productAndUserForOrder.getProduct(orderRequest.productId(), authorization);
+        UserResponse userResponse = productAndUserForOrder.getUser(orderRequest.userId());
         List<Order> orders = orderRepository.getOrdersByProductId(orderRequest.productId());
-        if(orders.size() > quantityForProduct) {
+        if(orders.size() > productResponse.quantity()) {
             System.out.println("There are more orders than products in inventory");
         }
         Order order = Order.builder()
@@ -39,6 +43,7 @@ public class OrderServiceImpl implements OrderService {
                 .paymentMethod(orderRequest.paymentMethod())
                 .build();
         orderRepository.save(order);
+        rabbitMQProducer.sendMessage("Your order was saved: " + "\nUser:" + userResponse.username() + "\nProduct:" + productResponse.name() + "\n Price: " + productResponse.price() + "\n Payment Method: " + orderRequest.paymentMethod());
     }
 
     @Override

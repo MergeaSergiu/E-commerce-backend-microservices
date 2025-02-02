@@ -6,4 +6,6 @@ public interface NotificationService {
 
     void sendEmailNotification(String message) throws MessagingException;
 
+    void sendEmailNotificationOrder(String message) throws MessagingException;
+
 }
