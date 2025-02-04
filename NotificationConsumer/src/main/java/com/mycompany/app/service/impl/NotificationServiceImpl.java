@@ -1,6 +1,7 @@
 package com.mycompany.app.service.impl;
 
 import com.mycompany.app.config.RabbitMQConfig;
+import com.mycompany.app.model.OrderMessageDTO;
 import com.mycompany.app.service.NotificationService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -51,22 +52,21 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME_ORDER)
-    public void sendEmailNotificationOrder(String message) throws MessagingException {
+    public void sendEmailNotificationOrder(OrderMessageDTO orderMessageDTO) throws MessagingException {
 
-        String recipient = "recipient@example.com"; // Change this to the recipient email
         String subject = "Order Notification";
 
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
-        helper.setTo(recipient);
+        helper.setTo(orderMessageDTO.email());
         helper.setSubject(subject);
-        helper.setText(message, true); // `true` enables HTML content
+        helper.setText(orderMessageDTO.message(), true); // `true` enables HTML content
         helper.setFrom("mergeasergiu@gmail.com");
         helper.setSentDate(new Date());
 
         emailSender.send(mimeMessage);
-        logger.info("Email sent to recipient@example.com with message: {}", message);
+        logger.info("Email sent to recipient@example.com with message: {}", orderMessageDTO.message());
 
     }
 }

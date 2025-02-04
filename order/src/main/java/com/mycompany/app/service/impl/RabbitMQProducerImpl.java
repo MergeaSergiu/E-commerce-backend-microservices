@@ -1,6 +1,7 @@
 package com.mycompany.app.service.impl;
 
 import com.mycompany.app.config.RabbitMQConfig;
+import com.mycompany.app.record.OrderMessageDTO;
 import com.mycompany.app.service.RabbitMQProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +19,8 @@ public class RabbitMQProducerImpl implements RabbitMQProducer {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void sendMessage(String message) {
-        logger.info("Sending message to RabbitMQ: {}", message);
-        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME_ORDER, RabbitMQConfig.ROUTING_KEY_ORDER, message);
+    public void sendMessage(OrderMessageDTO orderMessageDTO) {
+        logger.info("Sending message to RabbitMQ: {}", orderMessageDTO);
+        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME_ORDER, RabbitMQConfig.ROUTING_KEY_ORDER, orderMessageDTO);
     }
 }

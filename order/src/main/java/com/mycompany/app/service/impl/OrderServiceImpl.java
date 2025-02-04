@@ -2,10 +2,7 @@ package com.mycompany.app.service.impl;
 
 import com.mycompany.app.controller.ProductAndUserForOrder;
 import com.mycompany.app.model.Order;
-import com.mycompany.app.record.OrderRequest;
-import com.mycompany.app.record.OrderResponse;
-import com.mycompany.app.record.ProductResponse;
-import com.mycompany.app.record.UserResponse;
+import com.mycompany.app.record.*;
 import com.mycompany.app.repository.OrderRepository;
 import com.mycompany.app.service.OrderService;
 import com.mycompany.app.service.RabbitMQProducer;
@@ -43,7 +40,11 @@ public class OrderServiceImpl implements OrderService {
                 .paymentMethod(orderRequest.paymentMethod())
                 .build();
         orderRepository.save(order);
-        rabbitMQProducer.sendMessage("Your order was saved: " + "\nUser:" + userResponse.username() + "\nProduct:" + productResponse.name() + "\n Price: " + productResponse.price() + "\n Payment Method: " + orderRequest.paymentMethod());
+        OrderMessageDTO orderMessageDTO = OrderMessageDTO.builder()
+                        .email(userResponse.username())
+                                .message("Your order was saved: " + "\nUser:" + userResponse.username() + "\nProduct:" + productResponse.name() + "\n Price: " + productResponse.price() + "\n Payment Method: " + orderRequest.paymentMethod())
+                                    .build();
+        rabbitMQProducer.sendMessage(orderMessageDTO);
     }
 
     @Override
