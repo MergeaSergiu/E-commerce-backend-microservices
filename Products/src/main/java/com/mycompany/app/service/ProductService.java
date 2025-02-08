@@ -14,4 +14,5 @@ public interface ProductService {
     String updateProductQuantity(Integer id, Integer quantity);
 
     ProductResponse getProductById(Integer productId);
+
 }

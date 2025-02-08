@@ -1,3 +1,5 @@
+server:
+  port: 8086
 spring:
   application:
     name: order
@@ -13,14 +15,19 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-server:
-  port: 8086
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
     fetch-registry: true
     register-with-eureka: true
+  instance:
+    hostname: localhost
 management:
   tracing:
     sampling:

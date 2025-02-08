@@ -4,7 +4,6 @@ package com.mycompany.app.controller;
 import com.mycompany.app.record.ProductRequest;
 import com.mycompany.app.record.ProductResponse;
 import com.mycompany.app.service.ProductService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
