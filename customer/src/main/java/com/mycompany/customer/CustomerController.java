@@ -14,7 +14,6 @@ public class CustomerController {
     private final CustomerService customerService;
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
-        int a = 10;
     }
 
     @PostMapping

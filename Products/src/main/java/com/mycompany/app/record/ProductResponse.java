@@ -9,4 +9,5 @@ public record ProductResponse(
         String name,
         Float price,
         Integer quantity,
+        String imageURL,
         String description) { }
