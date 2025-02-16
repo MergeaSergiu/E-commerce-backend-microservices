@@ -4,9 +4,13 @@ package com.mycompany.app.controller;
 import com.mycompany.app.record.ProductRequest;
 import com.mycompany.app.record.ProductResponse;
 import com.mycompany.app.service.ProductService;
+import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -19,9 +23,10 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping
-    public ResponseEntity<String> addProducts(@RequestBody ProductRequest productRequest){
-        productService.saveProduct(productRequest);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> addProducts(@RequestPart("product") @Valid ProductRequest productRequest,
+                                              @RequestParam("multipartFile") MultipartFile multipartFile) throws IOException {
+        productService.saveProduct(productRequest, multipartFile);
         return ResponseEntity.ok("Product added successfully");
     }
 

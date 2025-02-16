@@ -30,6 +30,9 @@ public class GatewayRoutingConfig {
                 .route("order", r->r.path("/api/v1/order/**")
                         .filters(f -> f.filter(jwtFilter))
                         .uri("lb://order"))
+                .route("carts", r->r.path("/api/v1/carts/**")
+                        .filters(f -> f.filter(jwtFilter))
+                        .uri("lb://carts"))
                 .route("authentication", r->r.path("/api/v1/auth/**")
                         .uri("lb://authentication"))
                 .build();

@@ -70,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponse> getOrdersByUser( Integer userId, String authorization) {
+    public List<OrderResponse> getOrdersByUser(Integer userId, String authorization) {
         List<Order> ordersForUser = orderRepository.getOrdersByUserId(userId);
         List<OrderResponse> orderResponses = new ArrayList<>();
         for (Order order : ordersForUser) {
