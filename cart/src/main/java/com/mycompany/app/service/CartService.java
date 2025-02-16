@@ -15,7 +15,7 @@ public interface CartService {
 
     CartResponse getCartByUserIdInProgress(String authorization, Integer userId);
 
-    void createOrder(Integer cartId, PaymentMethod paymentMethod);
+    void createOrder(String authorization ,Integer cartId, PaymentMethod paymentMethod);
 
     List<Order> getAllOrders();
 

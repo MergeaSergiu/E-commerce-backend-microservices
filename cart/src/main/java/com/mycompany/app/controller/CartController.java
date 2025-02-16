@@ -36,9 +36,9 @@ public class CartController {
     }
 
     @PostMapping("/{cartId}")
-    public ResponseEntity<String> createOrderFromCart(@PathVariable("cartId") Integer cartId,
+    public ResponseEntity<String> createOrderFromCart(@RequestHeader("Authorization") String authorization, @PathVariable("cartId") Integer cartId,
                                                       @RequestParam("paymentMethod")PaymentMethod paymentMethod){
-        cartService.createOrder(cartId, paymentMethod);
+        cartService.createOrder(authorization, cartId, paymentMethod);
         return ResponseEntity.ok("Order created");
     }
 
