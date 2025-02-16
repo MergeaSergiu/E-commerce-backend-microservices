@@ -69,19 +69,33 @@ services:
     networks:
       - postgres_microservice
     restart: unless-stopped
+  postgres-cart:
+    image: postgres:latest
+    container_name: postgres_microservices_cart
+    environment:
+      POSTGRES_USER: sergiu
+      POSTGRES_PASSWORD: 2001
+      POSTGRES_DB: carts
+    volumes:
+      - postgres_data_carts:/var/lib/postgresql/data
+    ports:
+      - "5438:5432"
+    networks:
+      - postgres_microservice
+    restart: unless-stopped
   zipkin:
     image: openzipkin/zipkin:latest
     container_name: zipkin_microservices
     ports:
-      - "9411:9411" # Default port for Zipkin
+      - "9411:9411"
     networks:
       - postgres_microservice
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbit-microservices
     ports:
-      - "5672:5672" # Default port for RabbitMQ
-      - "15672:15672" # Management UI port
+      - "5672:5672"
+      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
@@ -102,6 +116,7 @@ volumes:
   postgres_data_products:
   postgres_data_authentication:
   postgres_data_order:
+  postgres_data_carts:
 networks:
   postgres_microservice:
     driver: bridge

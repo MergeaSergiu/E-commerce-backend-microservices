@@ -1,6 +1,7 @@
-package com.mycompany.app.record;
+package com.mycompany.app.model;
 
-public record ProductRequest(
+public record ProductResponse(
+        Integer productId,
         String name,
         Float price,
         Integer quantity,
