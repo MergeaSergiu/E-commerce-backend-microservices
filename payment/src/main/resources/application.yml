@@ -1,0 +1,25 @@
+stripe:
+  secret:
+    key: sk_test_51ORIfYJBMvY11WGEvI5TZDDd2XG21U7D3hpxBBC9ovO2kHC25d7iCfgOzRb52gc5XWcVKhrSjjz7p7KrcQg5j1w800eNszUYke
+server:
+  port: 8092
+spring:
+  application:
+    name: payment
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    hostname: localhost
+management:
+  tracing:
+    sampling:
+      probability: 1
