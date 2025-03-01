@@ -11,7 +11,6 @@ import com.mycompany.app.repository.UserRepository;
 import com.mycompany.app.service.UserService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.objenesis.ObjenesisHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -68,7 +67,7 @@ public class UserServiceImpl implements UserService {
                         authenticationRequest.password())
         );
         User user = (User)authenticate.getPrincipal();
-        String jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(user, user.getId());
         return AuthenticationResponse
                 .builder()
                 .token(jwtToken)

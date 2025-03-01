@@ -2,6 +2,6 @@ package com.mycompany.app.record;
 
 public record ProductRequest(
         String name,
-        Float price,
+        Integer price,
         Integer quantity,
         String description) { }

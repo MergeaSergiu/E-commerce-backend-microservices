@@ -11,15 +11,15 @@ public interface CartService {
 
     Cart getCart(Integer userId);
 
-    void addToCart(String authorization, Integer userId, Integer productId);
+    void addToCart(String authorization, Integer productId);
 
-    CartResponse getCartByUserIdInProgress(String authorization, Integer userId);
+    CartResponse getCartByUserIdInProgress(String authorization);
 
     void createOrder(String authorization ,Integer cartId, PaymentMethod paymentMethod);
 
     List<Order> getAllOrders();
 
-    List<Order> getOrdersForUser(Integer userId);
+    List<Order> getOrdersForUser(String authorization);
 
     List<Order> getOrdersForProduct(Integer productId);
 }

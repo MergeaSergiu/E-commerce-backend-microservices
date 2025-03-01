@@ -22,22 +22,20 @@ public class CartController {
 
     @PostMapping
     public ResponseEntity<Void> addToCart(@RequestHeader("Authorization") String authorization,
-                                          @RequestParam("userId") Integer userId,
                                           @RequestParam("productId") Integer productId) {
-        cartService.addToCart(authorization, userId, productId);
+        cartService.addToCart(authorization, productId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<CartResponse> getCartInProgressForUser(@RequestHeader("Authorization") String authorization,
-                                                                 @PathVariable("userId") Integer userId) {
-        CartResponse cartResponse = cartService.getCartByUserIdInProgress(authorization, userId);
+    @GetMapping("/Inprogress")
+    public ResponseEntity<CartResponse> getCartInProgressForUser(@RequestHeader("Authorization") String authorization) {
+        CartResponse cartResponse = cartService.getCartByUserIdInProgress(authorization);
         return ResponseEntity.ok(cartResponse);
     }
 
     @PostMapping("/{cartId}")
     public ResponseEntity<String> createOrderFromCart(@RequestHeader("Authorization") String authorization, @PathVariable("cartId") Integer cartId,
-                                                      @RequestParam("paymentMethod")PaymentMethod paymentMethod){
+                                                      @RequestParam("paymentMethod") PaymentMethod paymentMethod){
         cartService.createOrder(authorization, cartId, paymentMethod);
         return ResponseEntity.ok("Order created");
     }
@@ -48,9 +46,9 @@ public class CartController {
         return ResponseEntity.ok(orders);
     }
 
-    @GetMapping("/orders/users/{userId}")
-    public ResponseEntity<List<Order>> getOrdersByUserId(@PathVariable("userId") Integer userId ) {
-        List<Order> orderResponses = cartService.getOrdersForUser(userId);
+    @GetMapping("/orders/users")
+    public ResponseEntity<List<Order>> getOrdersByUserId(@RequestHeader("Authorization") String authorization) {
+        List<Order> orderResponses = cartService.getOrdersForUser(authorization);
         return ResponseEntity.ok(orderResponses);
     }
 
@@ -59,4 +57,5 @@ public class CartController {
         List<Order> orders = cartService.getOrdersForProduct(productId);
         return ResponseEntity.ok(orders);
     }
+
 }

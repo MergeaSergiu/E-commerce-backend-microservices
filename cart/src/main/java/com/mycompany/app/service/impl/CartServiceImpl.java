@@ -1,11 +1,9 @@
 package com.mycompany.app.service.impl;
 
+import com.mycompany.app.config.UtilMethod;
 import com.mycompany.app.controller.ProductAndUserForCart;
 import com.mycompany.app.entity.*;
-import com.mycompany.app.model.CartResponse;
-import com.mycompany.app.model.OrderMessageDTO;
-import com.mycompany.app.model.ProductResponse;
-import com.mycompany.app.model.UserResponse;
+import com.mycompany.app.model.*;
 import com.mycompany.app.repository.CartRepository;
 import com.mycompany.app.repository.OrderRepository;
 import com.mycompany.app.service.CartService;
@@ -23,15 +21,18 @@ public class CartServiceImpl implements CartService {
     private final ProductAndUserForCart productAndUserForCart;
     private final OrderRepository orderRepository;
     private final RabbitMQProducer rabbitMQProducer;
+    private final UtilMethod utilMethod;
 
     public CartServiceImpl(CartRepository cartRepository,
                            ProductAndUserForCart productAndUserForCart,
                            OrderRepository orderRepository,
-                           RabbitMQProducer rabbitMQProducer) {
+                           RabbitMQProducer rabbitMQProducer,
+                           UtilMethod utilMethod) {
         this.cartRepository = cartRepository;
         this.productAndUserForCart = productAndUserForCart;
         this.orderRepository = orderRepository;
         this.rabbitMQProducer = rabbitMQProducer;
+        this.utilMethod = utilMethod;
     }
 
     @Override
@@ -45,14 +46,16 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void addToCart(String authorization, Integer userId, Integer productId) {
+    public void addToCart(String authorization, Integer productId) {
+        Integer userId = utilMethod.extractUserIdFromAuthorizationToken(authorization);
         Cart cart = getCart(userId);
         cart.getProductIds().add(productId);
         cartRepository.save(cart);
     }
 
     @Override
-    public CartResponse getCartByUserIdInProgress(String authorization, Integer userId) {
+    public CartResponse getCartByUserIdInProgress(String authorization) {
+        Integer userId = utilMethod.extractUserIdFromAuthorizationToken(authorization);
         Cart cart = cartRepository.findCartByCartStatusAndUserId(CartStatus.IN_PROGRESS, userId).orElse(null);
         if(cart == null) return null;
         List<ProductResponse> productResponses = new ArrayList<>();
@@ -72,6 +75,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public void createOrder(String authorization ,Integer cartId, PaymentMethod paymentMethod) {
         Cart cart = cartRepository.findById(cartId).orElse(null);
+        Integer cartPrice = 0;
         if(cart == null) {
             throw new RuntimeException("Cart not found");
         }
@@ -82,6 +86,7 @@ public class CartServiceImpl implements CartService {
         List<String> productsName = new ArrayList<>();
         for(Integer productId : cart.getProductIds()) {
            productsName.add(productAndUserForCart.getProduct(productId, authorization).name());
+           cartPrice = cartPrice + productAndUserForCart.getProduct(productId, authorization).price();
         }
         cart.setCartStatus(CartStatus.COMPLETED);
         cartRepository.save(cart);
@@ -98,7 +103,12 @@ public class CartServiceImpl implements CartService {
                 .message("Your order was saved: " + "\nUser:" + userResponse.username() + "\nProducts:" + productsName + "\n Payment Method: " + newOrder.getPaymentMethod())
                 .build();
 
+        PaymentRequest paymentRequest = PaymentRequest.builder()
+                .orderId(newOrder.getId())
+                .amount(cartPrice)
+                .build();
         rabbitMQProducer.sendMessage(orderMessageDTO);
+        rabbitMQProducer.sendPaymentMessage(paymentRequest);
     }
 
     @Override
@@ -107,7 +117,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public List<Order> getOrdersForUser(Integer userId) {
+    public List<Order> getOrdersForUser(String authorization) {
+        Integer userId = utilMethod.extractUserIdFromAuthorizationToken(authorization);
         List<Order> allOrders = getAllOrders();
         List<Order> userOrders = new ArrayList<>();
         for(Order order : allOrders) {
