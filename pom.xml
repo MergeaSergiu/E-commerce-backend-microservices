@@ -18,9 +18,10 @@
     <module>spring-cloud-gateway</module>
     <module>Products</module>
     <module>NotificationConsumer</module>
-      <module>authentication</module>
-      <module>order</module>
+    <module>authentication</module>
+    <module>order</module>
     <module>cart</module>
+    <module>payment</module>
   </modules>
 
   <properties>

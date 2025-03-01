@@ -6,6 +6,6 @@ import lombok.Builder;
 public record ProductResponse(
         Integer productId,
         String name,
-        Float price,
+        Integer price,
         Integer quantity,
         String description) { }
